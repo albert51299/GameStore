@@ -1,9 +1,6 @@
 ﻿using GameStore.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameStore.Controllers {
     [Route("api/[controller]")]
@@ -16,7 +13,7 @@ namespace GameStore.Controllers {
 
         [HttpGet]
         public IEnumerable<Game> Get() {
-            return db.Games.ToList();
+            return db.Games;
         }
     }
 }
