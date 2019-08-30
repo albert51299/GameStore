@@ -1,0 +1,90 @@
+.Game {
+    font-weight: bold;
+    color: #333;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.Game p {
+    margin: 0px;
+    width: 200px;
+}
+
+.Image {
+    width: 200px;
+    height: 270px;
+}
+
+.RuPrice::after {
+    content: " ₽";
+}
+
+.BuyBtn a {
+    text-decoration: none;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.BuyBtn a:hover {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.LoginFormBtns input {
+    display: inline-block;
+    height: 2em;
+    width: 6em;
+    padding:10px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.LoginFormBtns input:focus {
+    outline: none;
+}
+
+.LoginFormBtns input:hover {
+    cursor: pointer;
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.NavigationBar {
+    margin-left: 0px;
+    padding-left: 0px;
+    list-style: none;
+}
+
+.NavigationBar li { 
+    display: inline-block; 
+    margin-right: 10px;
+}
+
+.NavigationBar input {
+    display: inline-block;
+    width: 5em;
+    padding:10px;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.NavigationBar input:focus {
+    outline: none;
+}
+
+.NavigationBar input:hover {
+    cursor: pointer;
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.Hide {
+    display: none;
+}
