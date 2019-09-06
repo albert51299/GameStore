@@ -5,6 +5,8 @@ using System.IO;
 namespace GameStore.Models {
     public class GameStoreContext : DbContext {
         public DbSet<Game> Games { get; set; }
+        public DbSet<AccountType> AccountTypes { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         public GameStoreContext(DbContextOptions options) : base(options) {
 
@@ -57,6 +59,11 @@ namespace GameStore.Models {
                     Price = 440,
                     Image = base64 + Convert.ToBase64String(File.ReadAllBytes("wwwroot/Images/CSGO.jpg"))
                 });
+
+            modelBuilder.Entity<AccountType>().HasData(
+                new AccountType { Id = 1, Type = "Admin" },
+                new AccountType { Id = 2, Type = "Client" }
+                );
         }
     }
 }
