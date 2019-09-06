@@ -1,21 +1,38 @@
-﻿class Content extends React.Component {
+﻿import GameList from "./gameList.jsx";
+import LoginForm from "./loginForm.jsx";
+import RegistrationForm from "./registrationForm.jsx";
+
+class Content extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { class: "Hide" };
-        this.show = this.show.bind(this);
+        this.state = { isLoginState: false, isRegState: false };
+        this.changeLoginState = this.changeLoginState.bind(this);
+        this.changeRegState = this.changeRegState.bind(this);
+
+        this.loginFormComponent = React.createRef();
+        this.registrationFormComponent = React.createRef();
     }
 
-    show() {
-        this.setState({ class: "NotHide" });
+    changeLoginState(loginState) {
+        this.setState({ isLoginState: loginState });
+        this.loginFormComponent.current.resetState();
+    }
+
+    changeRegState(regState) {
+        this.setState({ isRegState: regState });
+        this.loginFormComponent.current.resetState();
+        this.registrationFormComponent.current.resetState();
     }
 
     render() {
         return ( 
             <div>
-                <NavigationBar show={this.show}/>
+                <NavigationBar changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} 
+                    isLoginState={this.state.isLoginState} isRegState={this.state.isRegState}/>
                 <br/>
-                <LoginForm class={this.state.class}/>
-                <GameList/>
+                <LoginForm ref={this.loginFormComponent} isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} changeRegState={this.changeRegState}/>
+                <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} />
+                <GameList isLoginState={this.state.isLoginState}/>
             </div>
         );
     }
@@ -25,105 +42,57 @@ class NavigationBar extends React.Component {
     constructor(props){
         super(props);
         this.showLoginForm = this.showLoginForm.bind(this);
+        this.cancelLogin = this.cancelLogin.bind(this);
+        this.cancelReg = this.cancelReg.bind(this);
+    }
+
+    homePage() {
+        window.location.href = "/index.html"
     }
 
     showLoginForm() {
-        this.props.show();
+        this.props.changeLoginState(true);
+    }
+
+    aboutPage() {
+        // component instead this
+        window.location.href = "/about.html"
+    }
+
+    cancelLogin() {
+        this.props.changeLoginState(false);
+    }
+
+    cancelReg() {
+        this.props.changeRegState(false);
     }
 
     render() {
         return (
             <ul className="NavigationBar">
-                <li><input type="button" value="Home"></input></li>
-                <li><input type="button" value="Login" onClick={this.showLoginForm}></input></li>
-                <li><input type="button" value="About"></input></li>
+                <NavigationButton btnName="Home" handler={this.homePage} class={this.props.isLoginState === true ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="Login" handler={this.showLoginForm} class={this.props.isLoginState === true ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="About" handler={this.aboutPage} class={this.props.isLoginState === true ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="Back" handler={this.cancelLogin} class={((this.props.isLoginState === true) && (this.props.isRegState === false)) ? "NotHide" : "Hide"}/>
+                <NavigationButton btnName="Cancel" handler={this.cancelReg} class={this.props.isRegState === true ? "NotHide" : "Hide"}/>
             </ul>
         );
     }
 }
 
-/*class NavigationButton extends React.Component {
+class NavigationButton extends React.Component {
     constructor(props) {
-        super(props);        
+        super(props);
+        this.clickHandler = this.clickHandler.bind(this);        
+    }
+
+    clickHandler() {
+        this.props.handler();
     }
 
     render() {
         return (
-
-        );
-    }
-}*/
-
-class LoginForm extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render () {
-        return (
-            <div className={this.props.class}>
-                <div>
-                    <label>Login</label>
-                    <input type="text"></input>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password"></input>
-                </div>
-                <div className="LoginFormBtns">
-                    <input type="submit" value="Login"></input>
-                    <input type="button" value="Registration"></input>
-                </div>
-            </div>
-        );
-    }
-}
-
-class GameList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { games: [] };
-    }
-
-    loadData() {
-        fetch("/api/gamestore")
-            .then(response => response.json())
-            .then(data => this.setState({ games: data }));
-    }
-
-    componentDidMount() {
-        this.loadData();
-    }
-
-    render() {
-        return (
-        <div>
-            <div>
-                {
-                    this.state.games.map(function(game) {
-                        return <Game game={game} />
-                    })
-                }
-            </div>
-        </div>
-        );
-    }
-}
-
-class Game extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {data: props.game};
-    }
-
-    render() {
-        return (
-            <div className="Game">
-                <img src={this.state.data.image} className="Image"/>
-                <p>{this.state.data.name}</p>
-                <p className="RuPrice">Price: {this.state.data.price}</p>
-                <div className="BuyBtn"><a href="">Buy</a></div>
-            </div>
+            <li className={this.props.class}><input type="button" value={this.props.btnName} onClick={this.clickHandler}></input></li>
         );
     }
 }
