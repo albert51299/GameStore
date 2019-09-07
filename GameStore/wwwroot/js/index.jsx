@@ -30,7 +30,7 @@ class Content extends React.Component {
                 <NavigationBar changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} 
                     isLoginState={this.state.isLoginState} isRegState={this.state.isRegState}/>
                 <br/>
-                <LoginForm ref={this.loginFormComponent} isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} changeRegState={this.changeRegState}/>
+                <LoginForm ref={this.loginFormComponent} isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
                 <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} />
                 <GameList isLoginState={this.state.isLoginState}/>
             </div>

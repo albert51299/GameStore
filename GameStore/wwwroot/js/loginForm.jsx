@@ -1,7 +1,7 @@
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { login: "", password: "", wrongData: false };
+        this.state = { login: "", password: "", wrongLoginOrPassword: false };
 
         this.onLoginChanged = this.onLoginChanged.bind(this);
         this.onPasswordChanged = this.onPasswordChanged.bind(this);
@@ -11,7 +11,7 @@ class LoginForm extends React.Component {
     }
 
     resetState() {
-        this.setState({ login: "", password: "", wrongData: false });
+        this.setState({ login: "", password: "", wrongLoginOrPassword: false });
     }
 
     regHandler() {
@@ -31,7 +31,26 @@ class LoginForm extends React.Component {
         
         // check fields for correct
 
-        // fetch
+        let data = JSON.stringify({ "login":this.state.login, "password":this.state.password });
+
+        fetch("/api/Login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data === "ok") {
+                    this.props.changeLoginState(false);
+                    this.resetState();
+                }
+                else {
+                    this.setState({ wrongLoginOrPassword: true });
+                }
+            });
     }
 
     render () {
@@ -46,6 +65,7 @@ class LoginForm extends React.Component {
                     <label>Password</label>
                     <input type="password" value={this.state.password} onChange={this.onPasswordChanged}></input>
                 </div>
+                <div className={this.state.wrongLoginOrPassword === false ? "Hide" : "Message"}>Wrong login or password</div>
                 <input className="GrayBtn" type="submit" value="Login"></input>
                 <input className="GrayBtn" type="button" value="Registration" onClick={this.regHandler}></input>
                 </form>
