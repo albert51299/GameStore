@@ -20,15 +20,22 @@
     content: " ₽";
 }
 
-.BuyBtn a {
+.BuyBtn {
+    font-weight: bold;
     text-decoration: none;
-    background-color: #f4f4f4;
+    border: none;
+    background-color: blue;
     color: #333;
 }
 
-.BuyBtn a:hover {
+.BuyBtn:focus {
+    outline: none;
+ }
+
+.BuyBtn:hover {
+    cursor: pointer;
     background-color: #333;
-    color: #f4f4f4;
+    color: blue;
 }
 
 .GrayBtn {
@@ -70,7 +77,7 @@
 
 .NavigationBar input {
     display: inline-block;
-    width: 5em;
+    width: 6em;
     padding:10px;
     text-decoration: none;
     text-align: center;

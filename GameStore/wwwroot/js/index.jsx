@@ -5,9 +5,12 @@ import RegistrationForm from "./registrationForm.jsx";
 class Content extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isLoginState: false, isRegState: false };
+        this.state = { isLoginState: false, isRegState: false, signedIn: "false", login: "", accType:"", showPurchases: false };
+
         this.changeLoginState = this.changeLoginState.bind(this);
         this.changeRegState = this.changeRegState.bind(this);
+        this.changeLoginData = this.changeLoginData.bind(this);
+        this.changeShowPurchases = this.changeShowPurchases.bind(this);
 
         this.loginFormComponent = React.createRef();
         this.registrationFormComponent = React.createRef();
@@ -24,15 +27,28 @@ class Content extends React.Component {
         this.registrationFormComponent.current.resetState();
     }
 
+    changeLoginData(SignedIn, Login, AccType) {
+        this.setState({ signedIn: SignedIn, login: Login, accType: AccType });
+    }
+
+    changeShowPurchases(show) {
+        this.setState({ showPurchases: show });
+    }
+
     render() {
         return ( 
             <div>
-                <NavigationBar changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} 
+                <NavigationBar signedIn={this.state.signedIn} accType={this.state.accType} showPurchases={this.state.showPurchases}
+                    changeLoginData={this.changeLoginData} changeShowPurchases={this.changeShowPurchases}
+                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} 
                     isLoginState={this.state.isLoginState} isRegState={this.state.isRegState}/>
                 <br/>
-                <LoginForm ref={this.loginFormComponent} isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
-                <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} />
-                <GameList isLoginState={this.state.isLoginState}/>
+                <LoginForm ref={this.loginFormComponent} changeLoginData={this.changeLoginData}
+                    isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} 
+                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
+                <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} 
+                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
+                <GameList isLoginState={this.state.isLoginState} showPurchases={this.state.showPurchases}/>
             </div>
         );
     }
@@ -41,7 +57,10 @@ class Content extends React.Component {
 class NavigationBar extends React.Component {
     constructor(props){
         super(props);
+        this.purchases = this.purchases.bind(this);
+        this.cancelPurchases = this.cancelPurchases.bind(this);
         this.showLoginForm = this.showLoginForm.bind(this);
+        this.logout = this.logout.bind(this);
         this.cancelLogin = this.cancelLogin.bind(this);
         this.cancelReg = this.cancelReg.bind(this);
     }
@@ -50,13 +69,35 @@ class NavigationBar extends React.Component {
         window.location.href = "/index.html"
     }
 
+    purchases() {
+        this.props.changeShowPurchases(true);
+    }
+
+    cancelPurchases() {
+        this.props.changeShowPurchases(false);
+    }
+
     showLoginForm() {
         this.props.changeLoginState(true);
     }
 
-    aboutPage() {
-        // component instead this
-        window.location.href = "/about.html"
+    logout() {
+        var flag = confirm("Are you sure want to logout?");
+        if (flag === true) {
+            fetch("/api/Login", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data === "ok") {
+                        this.props.changeLoginData("false", "", "");
+                    }
+                });
+        }
     }
 
     cancelLogin() {
@@ -70,10 +111,17 @@ class NavigationBar extends React.Component {
     render() {
         return (
             <ul className="NavigationBar">
-                <NavigationButton btnName="Home" handler={this.homePage} class={this.props.isLoginState === true ? "Hide" : "NotHide"}/>
-                <NavigationButton btnName="Login" handler={this.showLoginForm} class={this.props.isLoginState === true ? "Hide" : "NotHide"}/>
-                <NavigationButton btnName="About" handler={this.aboutPage} class={this.props.isLoginState === true ? "Hide" : "NotHide"}/>
-                <NavigationButton btnName="Back" handler={this.cancelLogin} class={((this.props.isLoginState === true) && (this.props.isRegState === false)) ? "NotHide" : "Hide"}/>
+                <NavigationButton btnName="Home" handler={this.homePage} 
+                    class={((this.props.isLoginState === true) || (this.props.showPurchases === true)) ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="Purchases" handler={this.purchases} 
+                    class={((this.props.accType === "Client") && (this.props.showPurchases === false)) ? "NotHide" : "Hide"}/>
+                <NavigationButton btnName="Back" handler={this.cancelPurchases} class={this.props.showPurchases === true ? "NotHide" : "Hide"}/>
+                <NavigationButton btnName="Login" handler={this.showLoginForm} 
+                    class={((this.props.isLoginState === true) || (this.props.signedIn === "true")) ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="Logout" handler={this.logout} 
+                    class={((this.props.signedIn === "false") || (this.props.showPurchases === true)) ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="Back" handler={this.cancelLogin} 
+                    class={((this.props.isLoginState === true) && (this.props.isRegState === false)) ? "NotHide" : "Hide"}/>
                 <NavigationButton btnName="Cancel" handler={this.cancelReg} class={this.props.isRegState === true ? "NotHide" : "Hide"}/>
             </ul>
         );

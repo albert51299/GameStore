@@ -16,7 +16,7 @@ class GameList extends React.Component {
 
     render() {
         return (
-        <div className={this.props.isLoginState === true ? "Hide" : "NotHide"}>
+        <div className={((this.props.isLoginState === true) || (this.props.showPurchases === true)) ? "Hide" : "NotHide"}>
             {
                 this.state.games.map( function(game) { return <Game key={game.id} game={game} /> } )
             }
@@ -37,7 +37,7 @@ class Game extends React.Component {
                 <img src={this.state.data.image} className="Image"/>
                 <p>{this.state.data.name}</p>
                 <p className="RuPrice">Price: {this.state.data.price}</p>
-                <div className="BuyBtn"><a href="">Buy</a></div>
+                <input className="BuyBtn" type="button" value="Buy"></input>
             </div>
         );
     }

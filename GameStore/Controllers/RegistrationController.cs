@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace GameStore.Controllers {
     [Route("api/[controller]")]
-    public class RegistrationController {
+    public class RegistrationController : Controller {
         GameStoreContext db;
 
         public RegistrationController(GameStoreContext context) {
