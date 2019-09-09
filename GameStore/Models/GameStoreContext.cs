@@ -7,6 +7,7 @@ namespace GameStore.Models {
         public DbSet<Game> Games { get; set; }
         public DbSet<AccountType> AccountTypes { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
 
         public GameStoreContext(DbContextOptions options) : base(options) {
 

@@ -1,16 +1,21 @@
-﻿import GameList from "./gameList.jsx";
+﻿import BuyPanel from "./buyPanel.jsx";
 import LoginForm from "./loginForm.jsx";
 import RegistrationForm from "./registrationForm.jsx";
 
 class Content extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isLoginState: false, isRegState: false, signedIn: "false", login: "", accType:"", showPurchases: false };
+        this.state = { 
+            isLoginState: false, isRegState: false, 
+            signedIn: "false", login: "", accType:"", 
+            showPurchases: false, confirmBuy: false 
+        };
 
         this.changeLoginState = this.changeLoginState.bind(this);
         this.changeRegState = this.changeRegState.bind(this);
         this.changeLoginData = this.changeLoginData.bind(this);
         this.changeShowPurchases = this.changeShowPurchases.bind(this);
+        this.changeConfirmBuy = this.changeConfirmBuy.bind(this);
 
         this.loginFormComponent = React.createRef();
         this.registrationFormComponent = React.createRef();
@@ -35,20 +40,26 @@ class Content extends React.Component {
         this.setState({ showPurchases: show });
     }
 
+    changeConfirmBuy(confirm) {
+        this.setState({ confirmBuy: confirm });
+    }
+
     render() {
         return ( 
             <div>
                 <NavigationBar signedIn={this.state.signedIn} accType={this.state.accType} showPurchases={this.state.showPurchases}
                     changeLoginData={this.changeLoginData} changeShowPurchases={this.changeShowPurchases}
                     changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} 
-                    isLoginState={this.state.isLoginState} isRegState={this.state.isRegState}/>
+                    isLoginState={this.state.isLoginState} isRegState={this.state.isRegState}
+                    confirmBuy={this.state.confirmBuy}/>
                 <br/>
                 <LoginForm ref={this.loginFormComponent} changeLoginData={this.changeLoginData}
                     isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} 
                     changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
                 <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} 
                     changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
-                <GameList isLoginState={this.state.isLoginState} showPurchases={this.state.showPurchases}/>
+                <BuyPanel isLoginState={this.state.isLoginState} showPurchases={this.state.showPurchases} 
+                    confirmBuy={this.state.confirmBuy} changeConfirmBuy={this.changeConfirmBuy}/>
             </div>
         );
     }
@@ -110,7 +121,7 @@ class NavigationBar extends React.Component {
 
     render() {
         return (
-            <ul className="NavigationBar">
+            <ul className={this.props.confirmBuy === false ? "NavigationBar" : "Hide"}>
                 <NavigationButton btnName="Home" handler={this.homePage} 
                     class={((this.props.isLoginState === true) || (this.props.showPurchases === true)) ? "Hide" : "NotHide"}/>
                 <NavigationButton btnName="Purchases" handler={this.purchases} 
