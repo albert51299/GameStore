@@ -124,7 +124,7 @@ class RegistrationForm extends React.Component {
                     <input className="GrayBtn" type="submit" value="Registration"></input>
                 </form>
                 <div className="Hide" id="RegCompleted">
-                    <h2>Account created</h2>
+                    <h2>Account created!</h2>
                     <input className="GrayBtn" type="button" value="Login form" onClick={this.loginFormHandler}></input>
                     <input className="GrayBtn" type="button" value="Home page" onClick={this.homePageHandler}></input>
                 </div>
