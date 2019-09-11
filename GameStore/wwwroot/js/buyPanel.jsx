@@ -7,14 +7,25 @@ class BuyPanel extends React.Component {
         this.changeGame = this.changeGame.bind(this);
     }
 
-    loadData() {
-        fetch("/api/GameStore")
+    loadAllGames() {
+        fetch("/api/GetGames/All")
+            .then(response => response.json())
+            .then(data => this.setState({ games: data }));
+    }
+
+    loadGamesForClient() {
+        fetch("/api/GetGames/ForClient")
             .then(response => response.json())
             .then(data => this.setState({ games: data }));
     }
 
     componentDidMount() {
-        this.loadData();
+        if (this.props.signedIn === "true") {
+            this.loadGamesForClient();
+        }
+        else {
+            this.loadAllGames();
+        }
     }
 
     changeGame(game) {
@@ -24,11 +35,10 @@ class BuyPanel extends React.Component {
     render() {
         return (
         <div>
-            <div className={((this.props.isLoginState === true) || (this.props.showPurchases === true) 
-                || (this.props.confirmBuy === true)) ? "Hide" : "NotHide"}>
+            <div>
                 {
                     this.state.games.map( function(game) { 
-                        return <Game key={game.id} game={game} 
+                        return <Game key={game.id} game={game} signedIn={this.props.signedIn}
                             changeGame={this.changeGame} changeConfirmBuy={this.props.changeConfirmBuy}/> 
                     }, this)
                 }
@@ -58,7 +68,7 @@ class Game extends React.Component {
                 <img src={this.state.data.image} className="Image"/>
                 <p>{this.state.data.name}</p>
                 <p className="RuPrice">Price: {this.state.data.price}</p>
-                <input className="BuyBtn" type="button" value="Buy" onClick={this.buyHandler}></input>
+                <input className={this.props.signedIn === "true" ? "BuyBtn" : "Hide"} type="button" value="Buy" onClick={this.buyHandler}></input>
             </div>
         );
     }

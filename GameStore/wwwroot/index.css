@@ -11,6 +11,13 @@
     width: 200px;
 }
 
+.Game .LicenceKey {
+    width: auto;
+    background-color: cyan;
+    color: black;
+    display: inline-block;
+}
+
 .Image {
     width: 200px;
     height: 270px;

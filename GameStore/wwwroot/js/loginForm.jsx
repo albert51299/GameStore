@@ -44,8 +44,8 @@ class LoginForm extends React.Component {
             .then(response => response.json())
             .then(data => {
                 if (data.signedIn === "true") {
-                    this.props.changeLoginState(false);
                     this.props.changeLoginData(data.signedIn, data.login, data.accType);
+                    this.props.changeLoginState(false);
                     this.resetState();
                 }
                 else {

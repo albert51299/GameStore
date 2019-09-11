@@ -1,4 +1,5 @@
 ﻿import BuyPanel from "./buyPanel.jsx";
+import Purchases from "./purchases.jsx";
 import LoginForm from "./loginForm.jsx";
 import RegistrationForm from "./registrationForm.jsx";
 
@@ -55,11 +56,18 @@ class Content extends React.Component {
                 <br/>
                 <LoginForm ref={this.loginFormComponent} changeLoginData={this.changeLoginData}
                     isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} 
-                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
+                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} />
                 <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} 
                     changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
-                <BuyPanel isLoginState={this.state.isLoginState} showPurchases={this.state.showPurchases} 
-                    confirmBuy={this.state.confirmBuy} changeConfirmBuy={this.changeConfirmBuy}/>
+                {
+                    ((this.state.isLoginState === true) || (this.state.showPurchases === true) 
+                        || (this.state.confirmBuy === true)) ? null : 
+                            <BuyPanel signedIn={this.state.signedIn} confirmBuy={this.state.confirmBuy} 
+                                changeConfirmBuy={this.changeConfirmBuy}/>
+                }
+                {
+                    this.state.showPurchases ? <Purchases /> : null
+                }
             </div>
         );
     }
@@ -106,6 +114,8 @@ class NavigationBar extends React.Component {
                 .then(data => {
                     if (data === "ok") {
                         this.props.changeLoginData("false", "", "");
+                        this.props.changeLoginState(true);
+                        this.props.changeLoginState(false);
                     }
                 });
         }
