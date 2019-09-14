@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStore.Migrations
 {
     [DbContext(typeof(GameStoreContext))]
-    [Migration("20190901164406_GameStore.Models.AddAccTypes")]
-    partial class GameStoreModelsAddAccTypes
+    [Migration("20190914124157_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,27 @@ namespace GameStore.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("GameStore.Models.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountTypeId");
+
+                    b.Property<int>("Balance");
+
+                    b.Property<string>("Login");
+
+                    b.Property<string>("Password");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountTypeId");
+
+                    b.ToTable("Accounts");
+                });
 
             modelBuilder.Entity("GameStore.Models.AccountType", b =>
                 {
@@ -118,6 +139,48 @@ namespace GameStore.Migrations
                             Name = "Counter-Strike: Global Offensive",
                             Price = 440
                         });
+                });
+
+            modelBuilder.Entity("GameStore.Models.Purchase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId");
+
+                    b.Property<int>("GameId");
+
+                    b.Property<string>("LicenceKey");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Purchases");
+                });
+
+            modelBuilder.Entity("GameStore.Models.Account", b =>
+                {
+                    b.HasOne("GameStore.Models.AccountType", "AccountType")
+                        .WithMany()
+                        .HasForeignKey("AccountTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GameStore.Models.Purchase", b =>
+                {
+                    b.HasOne("GameStore.Models.Account", "Account")
+                        .WithMany("Purchases")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GameStore.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
