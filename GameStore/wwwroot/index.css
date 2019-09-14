@@ -8,7 +8,7 @@
 
 .Game p {
     margin: 0px;
-    width: 200px;
+    width: 210px;
 }
 
 .Game .LicenceKey {
@@ -19,8 +19,8 @@
 }
 
 .Image {
-    width: 200px;
-    height: 270px;
+    width: 210px;
+    height: 280px;
 }
 
 .RuPrice::after {
@@ -43,6 +43,24 @@
     cursor: pointer;
     background-color: #333;
     color: blue;
+}
+
+.EditBtn {
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    background-color: green;
+    color: black;
+}
+
+.EditBtn:focus {
+    outline: none;
+ }
+
+.EditBtn:hover {
+    cursor: pointer;
+    background-color: black;
+    color: green;
 }
 
 .GrayBtn {
@@ -84,7 +102,7 @@
 
 .NavigationBar input {
     display: inline-block;
-    width: 6em;
+    width: 7em;
     padding:10px;
     text-decoration: none;
     text-align: center;

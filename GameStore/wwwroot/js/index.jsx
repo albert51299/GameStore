@@ -1,4 +1,5 @@
-﻿import BuyPanel from "./buyPanel.jsx";
+﻿import AdminPanel from "./adminPanel.jsx";
+import BuyPanel from "./buyPanel.jsx";
 import Purchases from "./purchases.jsx";
 import LoginForm from "./loginForm.jsx";
 import RegistrationForm from "./registrationForm.jsx";
@@ -9,13 +10,17 @@ class Content extends React.Component {
         this.state = { 
             isLoginState: false, isRegState: false, 
             signedIn: "false", login: "", accType:"", 
-            showPurchases: false, confirmBuy: false 
+            showPurchases: false, confirmBuy: false,
+            updateDataState: false, addGameState: false, editGameState: false
         };
 
         this.changeLoginState = this.changeLoginState.bind(this);
         this.changeRegState = this.changeRegState.bind(this);
         this.changeLoginData = this.changeLoginData.bind(this);
         this.changeShowPurchases = this.changeShowPurchases.bind(this);
+        this.changeUpdateDataState = this.changeUpdateDataState.bind(this);
+        this.changeAddGameState = this.changeAddGameState.bind(this);
+        this.changeEditGameState = this.changeEditGameState.bind(this);
         this.changeConfirmBuy = this.changeConfirmBuy.bind(this);
 
         this.loginFormComponent = React.createRef();
@@ -27,8 +32,8 @@ class Content extends React.Component {
         this.loginFormComponent.current.resetState();
     }
 
-    changeRegState(regState) {
-        this.setState({ isRegState: regState });
+    changeRegState(state) {
+        this.setState({ isRegState: state });
         this.loginFormComponent.current.resetState();
         this.registrationFormComponent.current.resetState();
     }
@@ -37,12 +42,24 @@ class Content extends React.Component {
         this.setState({ signedIn: SignedIn, login: Login, accType: AccType });
     }
 
-    changeShowPurchases(show) {
-        this.setState({ showPurchases: show });
+    changeShowPurchases(state) {
+        this.setState({ showPurchases: state });
     }
 
-    changeConfirmBuy(confirm) {
-        this.setState({ confirmBuy: confirm });
+    changeUpdateDataState(state) {
+        this.setState({ updateDataState: state });
+    }
+
+    changeAddGameState(state) {
+        this.setState({ addGameState: state });
+    }
+
+    changeEditGameState(state) {
+        this.setState({ editGameState: state });
+    }
+
+    changeConfirmBuy(state) {
+        this.setState({ confirmBuy: state });
     }
 
     render() {
@@ -52,7 +69,9 @@ class Content extends React.Component {
                     changeLoginData={this.changeLoginData} changeShowPurchases={this.changeShowPurchases}
                     changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} 
                     isLoginState={this.state.isLoginState} isRegState={this.state.isRegState}
-                    confirmBuy={this.state.confirmBuy}/>
+                    confirmBuy={this.state.confirmBuy} updateDataState={this.state.updateDataState}
+                    changeUpdateDataState={this.changeUpdateDataState} addGameState={this.state.addGameState}
+                    changeAddGameState={this.changeAddGameState} editGameState={this.state.editGameState}/>
                 <br/>
                 <LoginForm ref={this.loginFormComponent} changeLoginData={this.changeLoginData}
                     isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} 
@@ -60,9 +79,13 @@ class Content extends React.Component {
                 <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} 
                     changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
                 {
+                    this.state.updateDataState ? <AdminPanel addGameState={this.state.addGameState} editGameState={this.state.editGameState}
+                        changeAddGameState={this.changeAddGameState} changeEditGameState={this.changeEditGameState}/> : null
+                }
+                {
                     ((this.state.isLoginState === true) || (this.state.showPurchases === true) 
-                        || (this.state.confirmBuy === true)) ? null : 
-                            <BuyPanel signedIn={this.state.signedIn} confirmBuy={this.state.confirmBuy} 
+                        || (this.state.updateDataState)) ? null : 
+                            <BuyPanel accType={this.state.accType} confirmBuy={this.state.confirmBuy} 
                                 changeConfirmBuy={this.changeConfirmBuy}/>
                 }
                 {
@@ -76,6 +99,9 @@ class Content extends React.Component {
 class NavigationBar extends React.Component {
     constructor(props){
         super(props);
+        this.updateData = this.updateData.bind(this);
+        this.cancelUpdateData = this.cancelUpdateData.bind(this);
+        this.addGame = this.addGame.bind(this);
         this.purchases = this.purchases.bind(this);
         this.cancelPurchases = this.cancelPurchases.bind(this);
         this.showLoginForm = this.showLoginForm.bind(this);
@@ -86,6 +112,18 @@ class NavigationBar extends React.Component {
 
     homePage() {
         window.location.href = "/index.html"
+    }
+
+    updateData() {
+        this.props.changeUpdateDataState(true);
+    }
+
+    addGame() {
+        this.props.changeAddGameState(true);
+    }
+
+    cancelUpdateData() {
+        this.props.changeUpdateDataState(false);
     }
 
     purchases() {
@@ -133,14 +171,20 @@ class NavigationBar extends React.Component {
         return (
             <ul className={this.props.confirmBuy === false ? "NavigationBar" : "Hide"}>
                 <NavigationButton btnName="Home" handler={this.homePage} 
-                    class={((this.props.isLoginState === true) || (this.props.showPurchases === true)) ? "Hide" : "NotHide"}/>
+                    class={((this.props.isLoginState === true) || (this.props.showPurchases === true) || (this.props.updateDataState)) ? "Hide" : "NotHide"}/>
+                <NavigationButton btnName="Update data" handler={this.updateData}
+                    class={((!this.props.updateDataState) && (this.props.accType === "Admin")) ? "NotHide" : "Hide"}/>
+                <NavigationButton btnName="Back" handler={this.cancelUpdateData}
+                    class={this.props.updateDataState && !this.props.editGameState ? "NotHide" : "Hide"}/>
+                <NavigationButton btnName="Add game" handler={this.addGame}
+                    class={this.props.updateDataState && !this.props.addGameState && !this.props.editGameState ? "NotHide" : "Hide"}/>
                 <NavigationButton btnName="Purchases" handler={this.purchases} 
                     class={((this.props.accType === "Client") && (this.props.showPurchases === false)) ? "NotHide" : "Hide"}/>
                 <NavigationButton btnName="Back" handler={this.cancelPurchases} class={this.props.showPurchases === true ? "NotHide" : "Hide"}/>
                 <NavigationButton btnName="Login" handler={this.showLoginForm} 
                     class={((this.props.isLoginState === true) || (this.props.signedIn === "true")) ? "Hide" : "NotHide"}/>
                 <NavigationButton btnName="Logout" handler={this.logout} 
-                    class={((this.props.signedIn === "false") || (this.props.showPurchases === true)) ? "Hide" : "NotHide"}/>
+                    class={((this.props.signedIn === "false") || (this.props.showPurchases === true) || (this.props.updateDataState)) ? "Hide" : "NotHide"}/>
                 <NavigationButton btnName="Back" handler={this.cancelLogin} 
                     class={((this.props.isLoginState === true) && (this.props.isRegState === false)) ? "NotHide" : "Hide"}/>
                 <NavigationButton btnName="Cancel" handler={this.cancelReg} class={this.props.isRegState === true ? "NotHide" : "Hide"}/>

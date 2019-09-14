@@ -3,8 +3,9 @@ import ConfirmBuyForm from "./confirmBuyForm.jsx";
 class BuyPanel extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { games: [], currentGame: {} };
-        this.changeGame = this.changeGame.bind(this);
+        this.state = { games: [], gameForAdd: {} };
+        this.changeGameForAdd = this.changeGameForAdd.bind(this);
+        this.loadGamesForClient = this.loadGamesForClient.bind(this);
     }
 
     loadAllGames() {
@@ -20,7 +21,7 @@ class BuyPanel extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.signedIn === "true") {
+        if (this.props.accType === "Client") {
             this.loadGamesForClient();
         }
         else {
@@ -28,22 +29,22 @@ class BuyPanel extends React.Component {
         }
     }
 
-    changeGame(game) {
-        this.setState({ currentGame: game });
+    changeGameForAdd(game) {
+        this.setState({ gameForAdd: game });
     }
 
     render() {
         return (
         <div>
-            <div>
+            <div className={this.props.confirmBuy ? "Hide" : "NotHide"}>
                 {
                     this.state.games.map( function(game) { 
-                        return <Game key={game.id} game={game} signedIn={this.props.signedIn}
-                            changeGame={this.changeGame} changeConfirmBuy={this.props.changeConfirmBuy}/> 
+                        return <Game key={game.id} game={game} accType={this.props.accType}
+                        changeGameForAdd={this.changeGameForAdd} changeConfirmBuy={this.props.changeConfirmBuy}/> 
                     }, this)
                 }
             </div>
-            <ConfirmBuyForm game={this.state.currentGame} 
+            <ConfirmBuyForm loadGamesForClient={this.loadGamesForClient} game={this.state.gameForAdd} 
                 changeConfirmBuy={this.props.changeConfirmBuy} confirmBuy={this.props.confirmBuy}/>
         </div>
         );
@@ -58,7 +59,7 @@ class Game extends React.Component {
     }
 
     buyHandler() {
-        this.props.changeGame(this.state.data);
+        this.props.changeGameForAdd(this.state.data);
         this.props.changeConfirmBuy(true);
     }
     
@@ -68,7 +69,7 @@ class Game extends React.Component {
                 <img src={this.state.data.image} className="Image"/>
                 <p>{this.state.data.name}</p>
                 <p className="RuPrice">Price: {this.state.data.price}</p>
-                <input className={this.props.signedIn === "true" ? "BuyBtn" : "Hide"} type="button" value="Buy" onClick={this.buyHandler}></input>
+                <input className={this.props.accType === "Client" ? "BuyBtn" : "Hide"} type="button" value="Buy" onClick={this.buyHandler}></input>
             </div>
         );
     }

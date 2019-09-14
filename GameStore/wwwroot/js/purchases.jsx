@@ -39,6 +39,8 @@ class Purchase extends React.Component {
                 <img src={this.state.data.game.image} className="Image"/>
                 <p>{this.state.data.game.name}</p>
                 <p className="RuPrice">Price: {this.state.data.game.price}</p>
+                <p className="LicenceKey">Licence key</p>
+                <br/>
                 <p className="LicenceKey">{this.state.data.licenceKey}</p>
             </div>
         );

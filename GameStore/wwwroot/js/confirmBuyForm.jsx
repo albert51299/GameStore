@@ -20,6 +20,7 @@ class ConfirmBuyForm extends React.Component {
             .then(data => {
                 if (data === "ok") {
                     this.setState({ isCompleted: true });
+                    this.props.loadGamesForClient();
                 }
             });
     }
