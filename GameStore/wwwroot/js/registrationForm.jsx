@@ -52,8 +52,8 @@ class RegistrationForm extends React.Component {
                 userTypeId = item.id;
             }
         }
-        
-        let data = JSON.stringify({ "login":userLogin, "password":userPassword, "balance":1000, "accountTypeId":userTypeId });
+
+        let data = JSON.stringify({ "login":userLogin, "password":userPassword, "accountTypeId":userTypeId });
         
         fetch("/api/Registration", {
             method: "POST",

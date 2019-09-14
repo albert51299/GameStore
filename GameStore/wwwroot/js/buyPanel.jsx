@@ -45,6 +45,7 @@ class BuyPanel extends React.Component {
                 }
             </div>
             <ConfirmBuyForm loadGamesForClient={this.loadGamesForClient} game={this.state.gameForAdd} 
+                clientBalance={this.props.clientBalance} changeClientBalance={this.props.changeClientBalance}
                 changeConfirmBuy={this.props.changeConfirmBuy} confirmBuy={this.props.confirmBuy}/>
         </div>
         );

@@ -95,7 +95,7 @@
     list-style: none;
 }
 
-.NavigationBar li.NotHide { 
+.NavigationBar .NavLi { 
     display: inline-block; 
     margin-right: 10px;
 }
@@ -123,4 +123,22 @@
 
 .Hide {
     display: none;
+}
+
+.RightAlign {
+    display: block;
+    float: right;
+    margin-right: 20px;
+}
+
+#Balance {
+    display: inline-block;
+    font-weight: bold;
+    color: green;
+    margin-right: 10px;
+}
+
+#AddBalanceBtn {
+    height: 3em;
+    width: 4em;
 }

@@ -20,6 +20,11 @@ namespace GameStore.Controllers {
         [HttpPost]
         public string Post([FromBody]Account account) {
             if (db.Accounts.FirstOrDefault(obj => obj.Login == account.Login) == null) {
+                account.Balance = null;
+                AccountType accountType = db.AccountTypes.FirstOrDefault(obj => obj.Id == account.AccountTypeId);
+                if (accountType.Type == "Client") {
+                    account.Balance = 2000;
+                }
                 db.Accounts.Add(account);
                 db.SaveChanges();
                 return "ok";

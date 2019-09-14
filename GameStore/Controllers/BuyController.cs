@@ -1,11 +1,12 @@
 ﻿using GameStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
 namespace GameStore.Controllers {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class BuyController : Controller {
         GameStoreContext db;
 
@@ -15,9 +16,29 @@ namespace GameStore.Controllers {
 
         [HttpGet]
         [Authorize]
-        public string Get(int id) {
+        public string GetBalance(int enteredSum) {
+            Account account = db.Accounts.FirstOrDefault(obj => obj.Login == User.Identity.Name);
+            return account.Balance.ToString();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public string ReplenishBalance(int enteredSum) {
+            Account account = db.Accounts.FirstOrDefault(obj => obj.Login == User.Identity.Name);
+            account.Balance += enteredSum;
+            db.Entry(account).State = EntityState.Modified;
+            db.SaveChanges();
+            return "ok";
+        }
+
+        [HttpGet]
+        [Authorize]
+        public string BuyGame(int id) {
             Account account = db.Accounts.FirstOrDefault(obj => obj.Login == User.Identity.Name);
             Purchase purchase = new Purchase { GameId = id, AccountId = account.Id, LicenceKey = GetLicenceKey() };
+            Game game = db.Games.FirstOrDefault(obj => obj.Id == id);
+            account.Balance -= game.Price;
+            db.Entry(account).State = EntityState.Modified;
             db.Purchases.Add(purchase);
             db.SaveChanges();
             return "ok";

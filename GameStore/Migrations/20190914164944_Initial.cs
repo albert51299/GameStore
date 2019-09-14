@@ -43,7 +43,7 @@ namespace GameStore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Login = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
-                    Balance = table.Column<int>(nullable: false),
+                    Balance = table.Column<int>(nullable: true),
                     AccountTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

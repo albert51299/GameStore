@@ -8,21 +8,28 @@ class ConfirmBuyForm extends React.Component {
     }
 
     confirmHandler() {
-        var url = "/api/Buy?id=" + this.props.game.id;
-        fetch(url, {
-            method: "GET",
-            headers: {
+        if (this.props.clientBalance < Number(this.props.game.price)) {
+            alert("Not enough money");
+        }
+        else {
+            var url = "/api/Buy/BuyGame?id=" + this.props.game.id;
+            fetch(url, {
+                method: "GET",
+                headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
-        })
+            })
             .then(response => response.json())
             .then(data => {
                 if (data === "ok") {
                     this.setState({ isCompleted: true });
                     this.props.loadGamesForClient();
+                    let currentBalance = this.props.clientBalance - Number(this.props.game.price);
+                    this.props.changeClientBalance(currentBalance);
                 }
             });
+        }
     }
 
     cancelHandler() {
