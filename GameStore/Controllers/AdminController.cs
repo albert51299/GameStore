@@ -1,4 +1,5 @@
 ﻿using GameStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace GameStore.Controllers {
         }
 
         [HttpPost]
+        [Authorize]
         public string Add([FromBody]Game game) {
             db.Games.Add(game);
             db.SaveChanges();
@@ -19,6 +21,7 @@ namespace GameStore.Controllers {
         }
 
         [HttpPost]
+        [Authorize]
         public string Update([FromBody]Game game) {
             db.Entry(game).State = EntityState.Modified;
             db.SaveChanges();

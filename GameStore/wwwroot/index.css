@@ -1,5 +1,4 @@
 .Game {
-    font-weight: bold;
     color: #333;
     float: left;
     margin-right: 10px;
@@ -7,6 +6,7 @@
 }
 
 .Game p {
+    font-weight: bold;
     margin: 0px;
     width: 210px;
 }

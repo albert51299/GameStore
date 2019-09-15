@@ -23,20 +23,15 @@ class Content extends React.Component {
         this.changeAddGameState = this.changeAddGameState.bind(this);
         this.changeEditGameState = this.changeEditGameState.bind(this);
         this.changeConfirmBuy = this.changeConfirmBuy.bind(this);
-
-        this.loginFormComponent = React.createRef();
-        this.registrationFormComponent = React.createRef();
     }
 
-    changeLoginState(loginState) {
-        this.setState({ isLoginState: loginState });
-        this.loginFormComponent.current.resetState();
+    changeLoginState(state) {
+        this.setState({ isLoginState: state });
     }
 
     changeRegState(state) {
         this.setState({ isRegState: state });
-        this.loginFormComponent.current.resetState();
-        this.registrationFormComponent.current.resetState();
+        //this.loginFormComponent.current.resetState();
     }
 
     changeLoginData(SignedIn, Login, AccType) {
@@ -79,11 +74,14 @@ class Content extends React.Component {
                     changeUpdateDataState={this.changeUpdateDataState} addGameState={this.state.addGameState}
                     changeAddGameState={this.changeAddGameState} editGameState={this.state.editGameState}/>
                 <br/>
-                <LoginForm ref={this.loginFormComponent} changeLoginData={this.changeLoginData}
-                    isLoginState={this.state.isLoginState} isRegState={this.state.isRegState} 
-                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} />
-                <RegistrationForm ref={this.registrationFormComponent} isRegState={this.state.isRegState} 
-                    changeLoginState={this.changeLoginState} changeRegState={this.changeRegState}/>
+                {
+                    this.state.isLoginState && !this.state.isRegState ? <LoginForm changeLoginData={this.changeLoginData}
+                        changeLoginState={this.changeLoginState} changeRegState={this.changeRegState} /> : null
+                }
+                {
+                    this.state.isRegState ? <RegistrationForm changeLoginState={this.changeLoginState} 
+                        changeRegState={this.changeRegState}/> : null
+                }
                 {
                     this.state.updateDataState ? <AdminPanel addGameState={this.state.addGameState} editGameState={this.state.editGameState}
                         changeAddGameState={this.changeAddGameState} changeEditGameState={this.changeEditGameState}/> : null
@@ -131,6 +129,7 @@ class NavigationBar extends React.Component {
 
     cancelUpdateData() {
         this.props.changeUpdateDataState(false);
+        this.props.changeAddGameState(false);
     }
 
     purchases() {
